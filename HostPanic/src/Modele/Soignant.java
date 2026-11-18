@@ -1,7 +1,7 @@
 package Modele;
 /**
  * Soignant de la clinique (médecin ou infirmier)
- * Classe abstraite : on ne crée jamais un soignant tout court
+ * Classe abstraite : on ne crée jamais un soignant tout court il faut qu'il soit clairement defini(Medecin ou infirmier)
  * la classe contient le salaire journalier et dit si c'est possible que le soignant peutSoigner(true ou false),
  * que chaque type de soignant redéfinit à sa manière
  *
@@ -23,7 +23,7 @@ public abstract class Soignant extends Personne {
     }
      /**
      * Renvoie le salaire journalier du soignant.
-     * @return le salaire par jour, en euros
+     * @return le salaire par jour
      */
 
     public int getSalaire() {
