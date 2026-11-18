@@ -4,8 +4,7 @@ public abstract class Soignant extends Personne {
     private int salaire;
 
     public Soignant(String nom, String prenom, int salaire) {
-        super(nom);
-        super(prenom);
+        super(nom,prenom);
         this.salaire = salaire;
     }
 
