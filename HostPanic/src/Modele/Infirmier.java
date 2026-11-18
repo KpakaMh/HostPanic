@@ -3,7 +3,7 @@
  * peut soigner seulement les gravités 1à3
  * n'importe quelle maladie
  * 
- * @author Valentin Paiceira
+ * @author Valentin Painceira
 */
 public class Infirmier extends Soignant{
     /** 
@@ -22,11 +22,10 @@ public class Infirmier extends Soignant{
      * selon ca limite de gravite 3 maximum
      * 
     * @param p patient examiner
-     * @return true si 1;2;3
-     * @return false si 4;5
+     * @return true si 1;2
+     * @return false si 3;4;5
      * 
      */
 @Override 
 public boolean peutSoigner (Patient p){
-if (p.getGravite() < 4) return true;
-else return false ;}}
+return p.getGravite() < 3;}}
