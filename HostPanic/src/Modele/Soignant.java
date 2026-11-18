@@ -23,7 +23,7 @@ public abstract class Soignant extends Personne {
     }
      /**
      * Renvoie le salaire journalier du soignant.
-     * @return le salaire par jour, en euros
+     * @return le salaire par jour
      */
 
     public int getSalaire() {
