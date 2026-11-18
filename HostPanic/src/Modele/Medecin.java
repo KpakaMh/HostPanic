@@ -1,12 +1,40 @@
+
+/**
+ * Représente un médecin au sein de la clinique.
+ * Le médecin dispose de compétences avancées et peut soigner n'importe quel patient,
+ * quelle que soit sa maladie ou sa gravité.
+ * 
+ * @author Valentin Painceira
+ */
+public class Medecin extends Soignant {
+
+    /**
+     * Constructeur permettant de créer un nouveau médecin avec son nom, son prénom et son salaire.
+     * 
+     * @param nom Le nom de famille du médecin
+     * @param prenom Le prénom du médecin
+     * @param salaire Le salaire journalier du médecin 
+     */
+    public Medecin(String nom, String prenom, int salaire) {
+        super(nom, prenom, salaire);
+    }
+
+    /**
+     * Indique si ce médecin peut prendre en charge un patient donné.
+     * Le médecin étant polyvalent, il accepte tous les patients sans restriction.
+     * 
+     * @param p Le patient que l'on souhaite examiner
+     * @return true dans tous les cas, car le médecin peut soigner tous les patients
+     */
+    @Override 
+    public boolean peutSoigner(Patient p) {
+        return true;
+    }
+}
+
+
 // faire des sous classe medecin en f des maladie
 // 
-
-public class Medecin extends Soignant{
-public Medecin(int salaire){
-super(int salaire);}
-@Override 
-public boolean peutSoigner (patient p){
-return true;}}
 //true if (patientetudie getgrippe) && (Maladie) && (Maladie INfractus)
 //    // faire que ca donne la recompense de soin soit donnet et que le patient parte
 //
