@@ -1,3 +1,5 @@
+package modele;
+
 /**
  * Enumeration Maladie
  * Chaque maladie nécessite un nombre donné de jour pour être traitée

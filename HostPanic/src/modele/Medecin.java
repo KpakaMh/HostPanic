@@ -1,4 +1,4 @@
-
+package modele;
 /**
  * Représente un médecin au sein de la clinique.
  * Le médecin dispose de compétences avancées et peut soigner n'importe quel patient,

@@ -1,3 +1,5 @@
+package modele;
+
 /**
  * Représente un infirmier
  * peut soigner seulement les gravités 1à3

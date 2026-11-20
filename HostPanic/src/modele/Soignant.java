@@ -1,4 +1,4 @@
-package Modele;
+package modele;
 /**
  * Soignant de la clinique (médecin ou infirmier)
  * Classe abstraite : on ne crée jamais un soignant tout court il faut qu'il soit clairement defini(Medecin ou infirmier)

@@ -1,4 +1,4 @@
-package Modele;
+package modele;
 
 /**
  * Classe Patient de l'hôpital.
