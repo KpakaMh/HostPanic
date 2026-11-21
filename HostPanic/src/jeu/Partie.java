@@ -1,3 +1,6 @@
+// CORRECTION COMPILATION (21/11/2026) : fichier restaure depuis le dernier commit (3437580).
+// La copie locale contenait une 2e classe publique "Main" (doublon de Main.java)
+// et aucune classe Partie : erreur "class Main is public, should be declared in Main.java".
 package jeu;
 
 import modele.Clinique;

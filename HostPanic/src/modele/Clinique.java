@@ -1,5 +1,8 @@
 package modele;
 
+// CORRECTION COMPILATION (21/11/2026) : imports "Modele.Patient" et "Modele.Soignant" supprimes.
+// Le package "Modele" n'existe plus (renomme "modele") et ces classes sont dans le meme package.
+
 import java.util.ArrayList;
 
 /**
