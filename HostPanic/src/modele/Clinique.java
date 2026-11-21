@@ -24,6 +24,9 @@ public class Clinique {
     private final ArrayList<Soignant> soignants;
     private final ArrayList<Soignant> soignantsOccupes;
     private final ArrayList<Patient> patientsSoignes;
+    // AJOUT V1 (21/11/2026) : bilan de la dernière fin de journée, lu par Partie pour l'affichage.
+    private final ArrayList<Patient> guerisDuJour;
+    private final ArrayList<Patient> decedesDuJour;
 
 /**
  * Initialise une nouvelle clinique avec le budget de départ défini selon la difficulté choisie.
@@ -38,6 +41,8 @@ public Clinique(int budgetInitial) {
         this.soignants = new ArrayList<>();
         this.soignantsOccupes = new ArrayList<>();
         this.patientsSoignes = new ArrayList<>();
+        this.guerisDuJour = new ArrayList<>();
+        this.decedesDuJour = new ArrayList<>();
     }
 
     //Les getters
@@ -180,6 +185,62 @@ public Clinique(int budgetInitial) {
             }
         }
         this.modifierBudget(-total); // Déduit le total du budget via la méthode dédiée
+    }
+
+    // ===== AJOUT V1 (21/11/2026) : étapes 3 et 4 de la journée =====
+
+    /**
+     * Termine la journée de soins (étapes 3 et 4).
+     * <ul>
+     *   <li>Un patient soigné aujourd'hui et dont la gravité vaut 0 est guéri :
+     *       il quitte la clinique, qui touche la prime de sa maladie et gagne de la réputation.</li>
+     *   <li>Un patient non soigné aujourd'hui s'aggrave (gravité + 1).</li>
+     *   <li>Un patient dont la gravité atteint 5 décède : il quitte la clinique,
+     *       qui paie une amende et perd de la réputation.</li>
+     * </ul>
+     * Les affectations du jour sont ensuite effacées pour le lendemain.
+     */
+    public void finirJournee() {
+        this.guerisDuJour.clear();
+        this.decedesDuJour.clear();
+
+        for (Patient p : new ArrayList<>(this.patients)) {
+            if (!this.patientsSoignes.contains(p)) {
+                p.aggraver();
+            }
+            if (p.estGueri()) {
+                this.patients.remove(p);
+                this.guerisDuJour.add(p);
+                this.modifierBudget(p.getMaladie().getPrime());
+                this.modifierReputation(POINTS_GUERISON);
+            } else if (p.estDecede()) {
+                this.patients.remove(p);
+                this.decedesDuJour.add(p);
+                this.modifierBudget(-AMENDE_DECES);
+                this.modifierReputation(-POINTS_DECES);
+            }
+        }
+
+        this.soignantsOccupes.clear();
+        this.patientsSoignes.clear();
+    }
+
+    /**
+     * Retourne une copie des patients guéris lors de la dernière fin de journée.
+     *
+     * @return les patients guéris
+     */
+    public ArrayList<Patient> getGuerisDuJour() {
+        return new ArrayList<>(this.guerisDuJour);
+    }
+
+    /**
+     * Retourne une copie des patients décédés lors de la dernière fin de journée.
+     *
+     * @return les patients décédés
+     */
+    public ArrayList<Patient> getDecedesDuJour() {
+        return new ArrayList<>(this.decedesDuJour);
     }
 
 }
