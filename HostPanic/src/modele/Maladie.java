@@ -1,13 +1,12 @@
 package modele;
 
 /**
- * Enumeration Maladie
- * Chaque maladie nécessite un nombre donné de jour pour être traitée
- * A chaque maladoie est associée une prime si elle a été traitée
+ * Énumération Maladie.
+ * Chaque maladie nécessite un nombre donné de jours de soin pour être guérie.
+ * À chaque maladie est associée une prime, encaissée par la clinique à la guérison.
  *
  * @author Fangnon Akouavi
  */
-
 public enum Maladie {
     GRIPPE(1, 300),
     FRACTURE(2, 600),
@@ -16,16 +15,18 @@ public enum Maladie {
     private final int dureeSoin;
     private final int prime;
 
-    Maladie(int dureeSoin, int prime){
+    Maladie(int dureeSoin, int prime) {
         this.dureeSoin = dureeSoin;
         this.prime = prime;
     }
 
-    private int getDureeSoin(){
+    /** @return le nombre de jours de soin nécessaires pour guérir */
+    public int getDureeSoin() {
         return this.dureeSoin;
     }
 
-    private int getPrime(){
+    /** @return la prime (en €) encaissée quand le patient est guéri */
+    public int getPrime() {
         return this.prime;
     }
 }
