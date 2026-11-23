@@ -19,10 +19,10 @@ import java.util.Scanner;
  * de la journée (arrivées, décisions du joueur, soins, salaires, bilan)
  * et vérifie si la partie est terminée.
  * <p>
- * La partie possède la clinique dirigée par le joueur (composition) :
- * la clinique est créée avec la partie et n'existe pas sans elle.
+ * La partie possède la clinique dirigée par le joueur (composition).
+ * La clinique est créée avec la partie et n'existe pas sans elle.
  * <p>
- * Partage du travail (règle 4.4 de la feuille de route) :
+ * Partage du travail (règle 4.4 de la feuille de route).
  * Partie dialogue avec le joueur (elle affiche et lit au clavier),
  * tandis que Clinique et les classes du package modele font les calculs
  * sans rien afficher.
@@ -32,28 +32,44 @@ import java.util.Scanner;
  */
 public class Partie {
 
-    /** Le numéro du jour en cours : commence à 1 et augmente de 1 à la fin de chaque journée. */
+    /** Le numéro du jour en cours. Il commence à 1 et augmente de 1 à la fin de chaque journée. */
     private int jour;
 
-    /** La clinique dirigée par le joueur : son budget, sa réputation, ses patients et ses soignants. */
+    /** La clinique dirigée par le joueur, avec son budget, sa réputation, ses patients et ses soignants. */
     private Clinique clinique;
 
-    // À FAIRE (V2) : ajouter l'attribut Difficulte quand la classe Difficulte existera.
+    /**
+     * Le clavier, pour lire les choix du joueur.
+     * <p>
+     * Il est créé une seule fois pour toute la partie. Si on recréait un Scanner
+     * chaque jour, le nouveau ne trouverait plus rien à lire et le jeu planterait.
+     * (Attribut technique, absent de l'UML.)
+     */
+    private Scanner clavier;
+
+    // À FAIRE (V2) ajouter l'attribut Difficulte quand la classe Difficulte existera.
+
+
+
+
+
+
+
+    
 
     /**
      * Crée une nouvelle partie, prête à jouer le jour 1.
      * <p>
-     * La clinique démarre avec 10 000 € (budget du mode Normal ; en V2, il dépendra
-     * de la difficulté choisie) et une équipe de départ de deux soignants :
-     * <ul>
-     *   <li>Dr Sow, médecin, payé 200 € par jour ;</li>
-     *   <li>Léa Martin, infirmière, payée 100 € par jour.</li>
-     * </ul>
+     * La clinique démarre avec 10 000 € (budget du mode Normal, en V2 il dépendra
+     * de la difficulté choisie) et une équipe de départ de deux soignants,
+     * Dr Sow, médecin, payé 200 € par jour,
+     * et Léa Martin, infirmière, payée 100 € par jour.
      *
      * @author DJELGOU Hamidou
      */
     public Partie() {
         jour = 1;
+        clavier = new Scanner(System.in);
         // 10 000 € = budget du mode Normal (en V2, il viendra de Difficulte)
         clinique = new Clinique(10000);
         clinique.ajouterSoignant(new Medecin("Sow", "Dr", 200));
@@ -63,31 +79,33 @@ public class Partie {
     /**
      * Joue une journée complète, étape par étape, puis passe au jour suivant.
      * <p>
-     * Déroulement d'une journée :
-     * <ul>
-     *   <li>Étape 1, arrivées : de nouveaux patients entrent dans la clinique (à venir, binôme 1).</li>
-     *   <li>Étape 2, décisions : pour chaque soignant, le joueur choisit au clavier le patient
-     *       à soigner (0 = personne) ; la clinique accepte ou refuse l'affectation.</li>
-     *   <li>Étapes 3 et 4 : soins, aggravations, guérisons et décès (à venir, méthode de Clinique).</li>
-     *   <li>Étape 5, salaires : la clinique paie chaque soignant.</li>
-     *   <li>Étape 6 : événement du jour (V2).</li>
-     *   <li>Étape 7, bilan : affichage du budget, de la réputation et du nombre de patients.</li>
-     * </ul>
+     * Étape 1, arrivées. De 1 à 3 nouveaux patients entrent dans la clinique.
+     * Étape 2, décisions. Pour chaque soignant, le joueur choisit au clavier le patient
+     * à soigner (0 = personne), puis la clinique accepte ou refuse l'affectation.
+     * Étapes 3 et 4. Soins, aggravations, guérisons et décès (à venir, méthode de Clinique).
+     * Étape 5, salaires. La clinique paie chaque soignant.
+     * Étape 6. Événement du jour (V2).
+     * Étape 7, bilan. Affichage du budget, de la réputation et du nombre de patients.
+     * <p>
      * Si la partie se termine ce jour-là, la méthode annonce la victoire ou la défaite.
      *
      * @author DJELGOU Hamidou
      */
     public void jouerJournee() {
-        Scanner clavier = new Scanner(System.in);
-
         System.out.println();
         System.out.println("========== Jour " + jour + " ==========");
 
-        // ----- Étape 1 : arrivées des patients -----
-        // À FAIRE : quand la méthode d'arrivée du binôme 1 existera,
-        // appeler clinique.accueillir(p) pour chaque nouveau patient.
+        // ----- Étape 1, arrivées des patients -----
+        // Patient.arriveeDuMatin() crée les nouveaux patients du jour (méthode de Fangnon),
+        // la clinique les accueille et on annonce leur arrivée au joueur.
+        System.out.println("Arrivées du matin");
+        for (Patient p : Patient.arriveeDuMatin()) {
+            clinique.accueillir(p);
+            System.out.println(p.getPrenom() + " " + p.getNom() + " arrive (" + p.getMaladie()
+                    + ", gravité " + p.getGravite() + ")");
+        }
 
-        // ----- Étape 2 : le joueur affecte chaque soignant à un patient -----
+        // ----- Étape 2, le joueur affecte chaque soignant à un patient -----
         ArrayList<Patient> patients = clinique.getPatients();
 
         for (Soignant s : clinique.getSoignants()) {
@@ -97,7 +115,7 @@ public class Partie {
             // On affiche les patients avec un numéro qui commence à 1
             int numero = 1;
             for (Patient p : patients) {
-                System.out.println(numero + ". " + p.getNom() + " (gravité " + p.getGravite() + ")");
+                System.out.println(numero + ". " + p.getPrenom() + " " + p.getNom() + " (gravité " + p.getGravite() + ")");
                 numero++;
             }
 
@@ -118,17 +136,17 @@ public class Partie {
             }
         }
 
-        // ----- Étapes 3 et 4 : guérisons, aggravations, décès -----
-        // À FAIRE : appeler la méthode de fin de journée de Clinique (écrite par Johanna,
-        // nom à confirmer en groupe, proposition : clinique.finirJournee()).
+        // ----- Étapes 3 et 4, guérisons, aggravations, décès -----
+        // À FAIRE appeler la méthode de fin de journée de Clinique (écrite par Johanna,
+        // nom à confirmer en groupe, proposition clinique.finirJournee()).
 
-        // ----- Étape 5 : salaires -----
+        // ----- Étape 5, salaires -----
         clinique.payerSalaires();
 
-        // ----- Étape 6 : événements (V2) -----
-        // À FAIRE : utiliser tirerEvenement(), puis evenement.appliquer(clinique).
+        // ----- Étape 6, événements (V2) -----
+        // À FAIRE utiliser tirerEvenement(), puis evenement.appliquer(clinique).
 
-        // ----- Étape 7 : bilan -----
+        // ----- Étape 7, bilan -----
         System.out.println();
         System.out.println("--- Bilan du jour " + jour + " ---");
         System.out.println("Budget : " + clinique.getBudget() + " €");
@@ -151,12 +169,8 @@ public class Partie {
     /**
      * Indique si la partie est finie.
      * <p>
-     * La partie s'arrête dès qu'une de ces trois situations arrive :
-     * <ul>
-     *   <li>les 30 jours sont passés ;</li>
-     *   <li>le budget de la clinique est passé sous 0 € ;</li>
-     *   <li>la réputation de la clinique est tombée à 0.</li>
-     * </ul>
+     * La partie s'arrête dès que les 30 jours sont passés, que le budget
+     * de la clinique est passé sous 0 €, ou que la réputation de la clinique est tombée à 0.
      * Cette méthode dit seulement si c'est fini, pas si le joueur a gagné.
      * Elle est utilisée par Main pour savoir quand arrêter de jouer des journées.
      *
@@ -170,15 +184,15 @@ public class Partie {
     /**
      * Calcule le score du joueur à la fin de la partie.
      * <p>
-     * La formule sera choisie avec le groupe en V3 ;
-     * en attendant, la méthode renvoie 0.
+     * La formule sera choisie avec le groupe en V3.
+     * En attendant, la méthode renvoie 0.
      *
      * @return le score de la partie (0 pour l'instant)
      * @author DJELGOU Hamidou
      */
     public int calculerScore() {
         int score = 0;
-        // À FAIRE (V3) : formule du score à valider avec le groupe.
+        // À FAIRE (V3) formule du score à valider avec le groupe.
         return score;
     }
 }
