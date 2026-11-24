@@ -30,4 +30,4 @@ public class Infirmier extends Soignant{
      */
 @Override 
 public boolean peutSoigner (Patient p){
-return p.getGravite() < 3;}}
+return p.getGravite() < 4;}}
