@@ -26,4 +26,3 @@ public class MedecinTest {
         assertTrue(medecin.peutSoigner(pGravite5));
     }
 }
-}
