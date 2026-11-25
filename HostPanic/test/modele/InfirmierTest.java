@@ -3,8 +3,11 @@ package modele;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-//** test unitaire
 
+/** test unitaire de la classe infirmier
+ * @author valentin
+ * 
+*/
 
 public class InfirmierTest {
 
