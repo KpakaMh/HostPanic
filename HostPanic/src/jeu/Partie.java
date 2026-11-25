@@ -1,6 +1,7 @@
 package jeu;
 
 import modele.Clinique;
+import modele.Difficulte;
 import modele.Infirmier;
 import modele.Medecin;
 import modele.Medicament;
@@ -45,23 +46,47 @@ public class Partie {
      */
     private Scanner clavier;
 
-    // À FAIRE (V2) ajouter l'attribut Difficulte quand la classe Difficulte existera.
+    /** La difficulté choisie par le joueur au début de la partie. Elle fixe le budget de départ (V2). */
+    private Difficulte difficulte;
+
+    /** Le montant de la subvention versée par l'État tous les 7 jours, en euros (V2). */
+    private static final int SUBVENTION = 2000;
 
     /**
      * Crée une nouvelle partie, prête à jouer le jour 1.
      * <p>
-     * La clinique démarre avec 10 000 € (budget du mode Normal, en V2 il dépendra
-     * de la difficulté choisie) et une équipe de départ de deux soignants,
+     * Le joueur choisit d'abord la difficulté (facile, normal ou difficile).
+     * La clinique démarre avec le budget de cette difficulté
+     * (15 000 €, 10 000 € ou 6 000 €) et une équipe de départ de deux soignants,
      * Dr Sow, médecin, payé 200 € par jour,
      * et Léa Martin, infirmière, payée 100 € par jour.
+     * Si le joueur tape un numéro qui n'existe pas, la difficulté Normal est choisie.
      *
      * @author DJELGOU Hamidou
      */
     public Partie() {
         jour = 1;
         clavier = new Scanner(System.in);
-        // 10 000 € = budget du mode Normal (en V2, il viendra de Difficulte)
-        clinique = new Clinique(10000);
+
+        // Le joueur choisit la difficulté (V2)
+        System.out.println("Choisissez la difficulté");
+        int numero = 1;
+        for (Difficulte d : Difficulte.values()) {
+            System.out.println(numero + ". " + d + " (budget de départ " + d.getBudgetInitial() + " €)");
+            numero++;
+        }
+
+        int choix = clavier.nextInt();
+
+        if (choix >= 1 && choix <= Difficulte.values().length) {
+            difficulte = Difficulte.values()[choix - 1];   // la difficulté n°1 est à la place 0
+        } else {
+            System.out.println("Ce numéro n'existe pas, la difficulté NORMAL est choisie.");
+            difficulte = Difficulte.NORMAL;
+        }
+        System.out.println("Difficulté " + difficulte + ", vous démarrez avec " + difficulte.getBudgetInitial() + " €.");
+
+        clinique = new Clinique(difficulte.getBudgetInitial());
         clinique.ajouterSoignant(new Medecin("Sow", "Dr", 200));
         clinique.ajouterSoignant(new Infirmier("Martin", "Léa", 100));
     }
@@ -76,7 +101,7 @@ public class Partie {
      * à soigner (0 = personne), puis la clinique accepte ou refuse l'affectation.
      * Étapes 3 et 4. Aggravations, guérisons et décès, calculés par la clinique.
      * Étape 5, salaires. La clinique paie chaque soignant.
-     * Étape 6. Événement du jour (V2).
+     * Étape 6. Tous les 7 jours, l'État verse une subvention de 2 000 €. Événement du jour (à venir, V2).
      * Étape 7, bilan. Affichage du budget, de la réputation et du nombre de patients.
      * <p>
      * Si la partie se termine ce jour-là, la méthode annonce la victoire ou la défaite.
@@ -167,7 +192,14 @@ public class Partie {
         // ----- Étape 5, salaires -----
         clinique.payerSalaires();
 
-        // ----- Étape 6, événements (V2) -----
+        // ----- Étape 6, subvention et événements (V2) -----
+        // Tous les 7 jours (jours 7, 14, 21 et 28), l'État verse une subvention.
+        // jour % 7 donne le reste de la division de jour par 7, il vaut 0 quand jour est un multiple de 7.
+        if (jour % 7 == 0) {
+            clinique.modifierBudget(SUBVENTION);
+            System.out.println();
+            System.out.println("L'État verse une subvention de " + SUBVENTION + " €.");
+        }
         // À FAIRE utiliser tirerEvenement(), puis evenement.appliquer(clinique).
 
         // ----- Étape 7, bilan -----
