@@ -28,6 +28,13 @@ public class Clinique {
     private final ArrayList<Patient> guerisDuJour;
     private final ArrayList<Patient> decedesDuJour;
 
+    /** Nombre maximum de patients que la clinique peut accueillir en même temps.
+     * @author Mouhamadou Kpaka
+     * @version V2
+     * */
+
+    private int capacite;
+
 /**
  * Initialise une nouvelle clinique avec le budget de départ défini selon la difficulté choisie.
  * 
@@ -104,17 +111,21 @@ public Clinique(int budgetInitial) {
         this.reputation = Math.max(0, Math.min(REPUTATION_MAX, nouvelle));
     }
 
+
     /**
-     * Fait entrer un patient dans la clinique.
+     * Accueille un patient si la clinique a encore de la place. Cette méthode évolue, passant de la v1 à v2
      *
      * @param p le patient à accueillir
+     * @return true si le patient est accueilli, false si la clinique est pleine
+     * @author Joahana
      */
-    public void accueillir(Patient p) {
-        if (p != null) {
-            this.patients.add(p);
+    public boolean accueillir(Patient p) {
+        if (patients.size() >= capacite) {
+            return false;
         }
+        patients.add(p);
+        return true;
     }
-
     /**
      * Ajoute un soignant à l'équipe, sans coût (équipe de départ).
      *
@@ -243,7 +254,13 @@ public Clinique(int budgetInitial) {
         return new ArrayList<>(this.decedesDuJour);
     }
 
-    public void augmenterCapacite(int nbPatients) {
-
+    /**
+     * Augmente la capacité d'accueil de la clinique.
+     *
+     * @param places nombre de places supplémentaires, positif
+     * @author
+     */
+    public void augmenterCapacite(int places) {
+        capacite += places;
     }
 }
