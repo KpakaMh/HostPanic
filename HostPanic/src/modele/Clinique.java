@@ -111,10 +111,14 @@ public Clinique(int budgetInitial) {
      *
      * @param montant le montant à ajouter (négatif pour retirer)
      */
-    public void modifierBudget(int montant) {
+    public void modifierBudget(int montant)throws BudgetInsuffisant {
+        if (this.budget + montant < 0) {
+            throw new BudgetInsuffisant(
+            "Budget insuffisant : votre budget est de " + this.budget + " €."
+        );
+    }
         this.budget += montant;
     }
-
     /**
      * Modifie la réputation, qui reste toujours entre 0 et 100.
      *
@@ -202,7 +206,7 @@ public Clinique(int budgetInitial) {
      * @param quantite le nombre de médicaments à acheter
      * @author DJELGOU Hamidou
      */
-    public void acheterMedicaments(Medicament m, int quantite) {
+    public void acheterMedicaments(Medicament m, int quantite) throws BudgetInsuffisant{
         if (quantite > 0) {
             for (int i = 0; i < quantite; i++) {
                 this.medicaments.add(m); // un médicament de plus dans le stock
@@ -215,7 +219,7 @@ public Clinique(int budgetInitial) {
      * Paie le salaire journalier de chaque soignant de l'équipe.
      * 
      */
-    public void payerSalaires() {
+    public void payerSalaires() throws BudgetInsuffisant {
         int total = 0;
         for (Soignant s : this.soignants) {
             if (s != null) {
@@ -251,7 +255,7 @@ public Clinique(int budgetInitial) {
      * @author DJELGOU Hamidou
      * 
      */
-    public void finirJournee() {
+    public void finirJournee() throws BudgetInsuffisant {
         this.guerisDuJour.clear();
         this.decedesDuJour.clear();
 

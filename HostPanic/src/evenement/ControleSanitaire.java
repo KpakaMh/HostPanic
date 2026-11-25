@@ -2,6 +2,7 @@ package evenement;
 
 import java.util.Random;
 import modele.Clinique;
+import modele.BudgetInsuffisant;
 
 /**
  * Représente la classe ControleSanitaire, un événement
@@ -43,7 +44,7 @@ public class ControleSanitaire extends Evenement {
      * - nombre à faire en fonction de la difficulté
      */
     @Override
-    public void appliquer(Clinique c) {
+    public void appliquer(Clinique c) throws BudgetInsuffisant{
         if (this.random.nextBoolean()) {
             c.modifierReputation(GAIN_REPUTATION);
         } else {

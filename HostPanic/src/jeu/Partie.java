@@ -6,7 +6,7 @@ import modele.Medecin;
 import modele.Medicament;
 import modele.Patient;
 import modele.Soignant;
-
+import modele.BudgetInsuffisant;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -83,7 +83,7 @@ public class Partie {
      *
      * @author DJELGOU Hamidou
      */
-    public void jouerJournee() {
+    public void jouerJournee() throws BudgetInsuffisant {
         System.out.println();
         System.out.println("========== Jour " + jour + " ==========");
 
@@ -125,8 +125,12 @@ public class Partie {
                 Medicament m = Medicament.values()[choixMed - 1];   // le médicament n°1 est à la place 0
                 System.out.println("Combien de " + m + " ?");
                 int quantite = clavier.nextInt();
-                clinique.acheterMedicaments(m, quantite);
-                System.out.println("Stock de " + m + " : " + clinique.compterMedicaments(m));
+                try {
+                    clinique.acheterMedicaments(m, quantite);
+                    System.out.println("Stock de " + m + " : " + clinique.compterMedicaments(m));
+                } catch (BudgetInsuffisant e) {
+                    System.out.println(e.getMessage());
+                }
             }
         }
 

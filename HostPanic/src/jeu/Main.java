@@ -1,6 +1,6 @@
 // CORRECTION COMPILATION (21/11/2026) : package "Jeu" renomme en "jeu" (minuscule, comme le dossier et l'UML).
 package jeu;
-
+import modele.BudgetInsuffisant;
 /**
  * Classe principale d'HostPanic!!
  * <p>
@@ -19,7 +19,7 @@ public class Main {
      *
      * @param args arguments de la ligne de commande (non utilisés)
      **/
-    public static void main(String[] args) {
+    public static void main(String[] args) throws BudgetInsuffisant {
         afficherMenu();
         // CORRECTION COMPILATION (21/11/2026) : "jeu.Partie" simplifie en "Partie" (meme package).
         // "jourerJournee()" n'existait pas (coquille) : remplace par une boucle

@@ -1,6 +1,7 @@
 package evenement;
 
 import modele.Clinique;
+import modele.BudgetInsuffisant;
 
 /**
  * Événement représentant le don d'un mécène à la clinique.
@@ -24,7 +25,7 @@ public class DonMecene extends Evenement {
      * @param c il s'agit de la clinique qui reçoit le don
      */
     @Override
-    public void appliquer(Clinique c) {
+    public void appliquer(Clinique c) throws BudgetInsuffisant{
         c.modifierBudget(Montant_Don);
     }
 }
