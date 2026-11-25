@@ -19,11 +19,10 @@ public class MedecinTest {
 
     @Test
     void testPeutSoignerToutesGravitesEtMaladies() {
-        Patient pGravite1 = new Patient("A", "B", Maladie.GRIPPE, 1, 2);
-        Patient pGravite5 = new Patient("C", "D", Maladie.GRIPPE, 5, 8);
+        Patient pGravite1 = new Patient("A", "B", Maladie.GRIPPE, 1);
+        Patient pGravite5 = new Patient("C", "D", Maladie.GRIPPE, 4);
 
         assertTrue(medecin.peutSoigner(pGravite1));
         assertTrue(medecin.peutSoigner(pGravite5));
     }
-}
 }
