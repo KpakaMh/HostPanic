@@ -16,6 +16,8 @@ public class Clinique {
     private static final int POINTS_GUERISON = 2;
     private static final int POINTS_DECES = 10;
     private static final int AMENDE_DECES = 500;
+    /** Capacité normale de la clinique. Au départ, avec 1 médecin et 1 infirmier, elle peut accueillir 3 patients. */
+    public static final int CAPACITE_NORMALE = 3;
 
     private int budget;
     private int reputation;
@@ -51,7 +53,7 @@ public Clinique(int budgetInitial) {
         this.patientsSoignes = new ArrayList<>();
         this.guerisDuJour = new ArrayList<>();
         this.decedesDuJour = new ArrayList<>();
-        this.capacite = 10; // La clinique peut accueillir 10 patients en même temps au départ.
+        this.capacite = CAPACITE_NORMALE; // Au départ, la clinique peut accueillir 3 patients en même temps.
     }
 
     //Les getters
@@ -302,5 +304,19 @@ public Clinique(int budgetInitial) {
      */
     public void augmenterCapacite(int places) {
        capacite += places;
+    }
+
+    /**
+     * Fixe la capacité d'accueil de la clinique à une valeur précise.
+     * Elle sert pendant une épidémie, où la capacité passe à 5 patients,
+     * puis pour revenir ensuite à la capacité normale (CAPACITE_NORMALE).
+     *
+     * @param places le nouveau nombre maximum de patients
+     * @author DJELGOU Hamidou  et Mouhamadou Kpaka Adesanya
+     */
+    public void fixerCapacite(int places) {
+        if (places >= 0) {
+            this.capacite = places;
+        }
     }
 }
