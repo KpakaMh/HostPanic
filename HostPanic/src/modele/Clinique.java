@@ -51,6 +51,7 @@ public Clinique(int budgetInitial) {
         this.patientsSoignes = new ArrayList<>();
         this.guerisDuJour = new ArrayList<>();
         this.decedesDuJour = new ArrayList<>();
+        this.capacite = 10; // La clinique peut accueillir 10 patients en même temps au départ.
     }
 
     //Les getters
@@ -222,18 +223,31 @@ public Clinique(int budgetInitial) {
         this.modifierBudget(-total); // Déduit le total du budget via la méthode dédiée
     }
 
-    // ===== AJOUT V1 (21/11/2026) : étapes 3 et 4 de la journée =====
-
     /**
-     * Termine la journée de soins (étapes 3 et 4).
-     * <ul>
-     *   <li>Un patient soigné aujourd'hui et dont la gravité vaut 0 est guéri :
-     *       il quitte la clinique, qui touche la prime de sa maladie et gagne de la réputation.</li>
-     *   <li>Un patient non soigné aujourd'hui s'aggrave (gravité + 1).</li>
-     *   <li>Un patient dont la gravité atteint 5 décède : il quitte la clinique,
-     *       qui paie une amende et perd de la réputation.</li>
-     * </ul>
-     * Les affectations du jour sont ensuite effacées pour le lendemain.
+     * Termine la journée de la clinique (étapes 3 et 4 de la journée).
+     * Cette méthode est appelée par Partie, une fois que le joueur a affecté ses soignants
+     * et avant le paiement des salaires. Elle fait seulement les calculs, sans rien afficher.
+     * <p>
+     * Étape 3, les aggravations. La méthode passe sur chaque patient de la clinique.
+     * Un patient qui n'est pas dans la liste patientsSoignes n'a reçu aucun soin aujourd'hui,
+     * alors sa gravité augmente de 1 (méthode aggraver de Patient).
+     * <p>
+     * Étape 4, les guérisons et les décès.
+     * Un patient guéri (sa durée de soin restante est à 0) rapporte à la clinique la prime
+     * de sa maladie (getPrime de Maladie) et 2 points de réputation (POINTS_GUERISON).
+     * Un patient décédé (sa gravité a atteint 5) coûte 500 € d'amende (AMENDE_DECES)
+     * et fait perdre 10 points de réputation (POINTS_DECES).
+     * Dans les deux cas, le patient quitte la clinique.
+     * Les patients qui ne sont ni guéris ni décédés restent pour le lendemain.
+     * Les patients guéris et décédés du jour sont aussi rangés dans les listes
+     * guerisDuJour et decedesDuJour, pour que Partie puisse les afficher (ajout de Mouhamadou Kpaka).
+     * <p>
+     * Fin de journée. Les listes soignantsOccupes et patientsSoignes sont vidées,
+     * pour que chaque soignant puisse de nouveau être affecté le lendemain
+     * et que chaque patient puisse de nouveau recevoir un soin.
+     *
+     * @author DJELGOU Hamidou
+     * @author Mouhamadou Kpaka (listes guerisDuJour et decedesDuJour)
      */
     public void finirJournee() {
         this.guerisDuJour.clear();
@@ -285,6 +299,6 @@ public Clinique(int budgetInitial) {
      * @author
      */
     public void augmenterCapacite(int places) {
-        capacite += places;
+       capacite += places;
     }
 }
