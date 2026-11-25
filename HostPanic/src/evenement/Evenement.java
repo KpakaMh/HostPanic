@@ -1,4 +1,4 @@
-package evenements;
+package evenement;
 
 import modele.Clinique;
 
@@ -12,7 +12,7 @@ import modele.Clinique;
  * La classe est abstraite : seules les classes filles créent des événements.
  * Chaque fille doit fournir son effet dans {@link #appliquer(Clinique)}.
  *
- * @author : Mouhamadou Adesanya Kpaka
+ * @author Mouhamadou Adesanya Kpaka
  * @version V2
  */
 public abstract class Evenement {
