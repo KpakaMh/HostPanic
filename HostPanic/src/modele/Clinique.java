@@ -24,9 +24,6 @@ public class Clinique {
     private final ArrayList<Soignant> soignants;
     private final ArrayList<Soignant> soignantsOccupes;
     private final ArrayList<Patient> patientsSoignes;
-    // AJOUT V1 (21/11/2026) : bilan de la dernière fin de journée, lu par Partie pour l'affichage.
-    private final ArrayList<Patient> guerisDuJour;
-    private final ArrayList<Patient> decedesDuJour;
 
 /**
  * Initialise une nouvelle clinique avec le budget de départ défini selon la difficulté choisie.
@@ -41,8 +38,6 @@ public Clinique(int budgetInitial) {
         this.soignants = new ArrayList<>();
         this.soignantsOccupes = new ArrayList<>();
         this.patientsSoignes = new ArrayList<>();
-        this.guerisDuJour = new ArrayList<>();
-        this.decedesDuJour = new ArrayList<>();
     }
 
     //Les getters
@@ -187,60 +182,59 @@ public Clinique(int budgetInitial) {
         this.modifierBudget(-total); // Déduit le total du budget via la méthode dédiée
     }
 
-    // ===== AJOUT V1 (21/11/2026) : étapes 3 et 4 de la journée =====
-
     /**
-     * Termine la journée de soins (étapes 3 et 4).
-     * <ul>
-     *   <li>Un patient soigné aujourd'hui et dont la gravité vaut 0 est guéri :
-     *       il quitte la clinique, qui touche la prime de sa maladie et gagne de la réputation.</li>
-     *   <li>Un patient non soigné aujourd'hui s'aggrave (gravité + 1).</li>
-     *   <li>Un patient dont la gravité atteint 5 décède : il quitte la clinique,
-     *       qui paie une amende et perd de la réputation.</li>
-     * </ul>
-     * Les affectations du jour sont ensuite effacées pour le lendemain.
+     * Termine la journée de la clinique (étapes 3 et 4 de la journée).
+     * Cette méthode est appelée par Partie, une fois que le joueur a affecté ses soignants
+     * et avant le paiement des salaires. Elle fait seulement les calculs, sans rien afficher.
+     * <p>
+     * Étape 3, les aggravations. La méthode passe sur chaque patient de la clinique.
+     * Un patient qui n'est pas dans la liste patientsSoignes n'a reçu aucun soin aujourd'hui,
+     * alors sa gravité augmente de 1 (méthode aggraver de Patient).
+     * <p>
+     * Étape 4, les guérisons et les décès.
+     * Un patient guéri (sa durée de soin restante est à 0) rapporte à la clinique la prime
+     * de sa maladie (getPrime de Maladie) et 2 points de réputation (POINTS_GUERISON).
+     * Un patient décédé (sa gravité a atteint 5) coûte 500 € d'amende (AMENDE_DECES)
+     * et fait perdre 10 points de réputation (POINTS_DECES).
+     * Dans les deux cas, le patient quitte la clinique.
+     * Les patients qui ne sont ni guéris ni décédés restent pour le lendemain.
+     * <p>
+     * Fin de journée. Les listes soignantsOccupes et patientsSoignes sont vidées,
+     * pour que chaque soignant puisse de nouveau être affecté le lendemain
+     * et que chaque patient puisse de nouveau recevoir un soin.
+     *
+     * @author DJELGOU Hamidou
      */
     public void finirJournee() {
-        this.guerisDuJour.clear();
-        this.decedesDuJour.clear();
+        // La liste des patients qui quittent la clinique à la fin de la journée (guéris ou décédés)
+        ArrayList<Patient> partants = new ArrayList<>();
 
-        for (Patient p : new ArrayList<>(this.patients)) {
+        for (Patient p : this.patients) {
+            // Un patient qui n'a pas été soigné aujourd'hui s'aggrave
             if (!this.patientsSoignes.contains(p)) {
                 p.aggraver();
             }
+
             if (p.estGueri()) {
-                this.patients.remove(p);
-                this.guerisDuJour.add(p);
                 this.modifierBudget(p.getMaladie().getPrime());
                 this.modifierReputation(POINTS_GUERISON);
+                partants.add(p);
             } else if (p.estDecede()) {
-                this.patients.remove(p);
-                this.decedesDuJour.add(p);
                 this.modifierBudget(-AMENDE_DECES);
                 this.modifierReputation(-POINTS_DECES);
+                partants.add(p);
             }
         }
 
+        // On retire les partants après la boucle, car on ne peut pas retirer
+        // un élément d'une liste pendant qu'on la parcourt avec for
+        for (Patient p : partants) {
+            this.patients.remove(p);
+        }
+
+        // Le lendemain, tout le monde est de nouveau libre
         this.soignantsOccupes.clear();
         this.patientsSoignes.clear();
-    }
-
-    /**
-     * Retourne une copie des patients guéris lors de la dernière fin de journée.
-     *
-     * @return les patients guéris
-     */
-    public ArrayList<Patient> getGuerisDuJour() {
-        return new ArrayList<>(this.guerisDuJour);
-    }
-
-    /**
-     * Retourne une copie des patients décédés lors de la dernière fin de journée.
-     *
-     * @return les patients décédés
-     */
-    public ArrayList<Patient> getDecedesDuJour() {
-        return new ArrayList<>(this.decedesDuJour);
     }
 
 }

@@ -1,4 +1,4 @@
-package Evenements;
+package evenements;
 
 import modele.Clinique;
 
