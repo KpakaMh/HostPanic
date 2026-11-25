@@ -3,6 +3,7 @@ package jeu;
 import modele.Clinique;
 import modele.Infirmier;
 import modele.Medecin;
+import modele.Medicament;
 import modele.Patient;
 import modele.Soignant;
 
@@ -69,7 +70,9 @@ public class Partie {
      * Joue une journée complète, étape par étape, puis passe au jour suivant.
      * <p>
      * Étape 1, arrivées. De 1 à 3 nouveaux patients entrent dans la clinique.
-     * Étape 2, décisions. Pour chaque soignant, le joueur choisit au clavier le patient
+     * Étape 2, décisions. Le joueur achète d'abord des médicaments s'il le souhaite (V2),
+     * car chaque soin consomme le médicament de la maladie du patient.
+     * Ensuite, pour chaque soignant, il choisit au clavier le patient
      * à soigner (0 = personne), puis la clinique accepte ou refuse l'affectation.
      * Étapes 3 et 4. Aggravations, guérisons et décès, calculés par la clinique.
      * Étape 5, salaires. La clinique paie chaque soignant.
@@ -94,7 +97,36 @@ public class Partie {
                     + ", gravité " + p.getGravite() + ")");
         }
 
-        // ----- Étape 2, le joueur affecte chaque soignant à un patient -----
+        // ----- Étape 2a, le joueur achète des médicaments (V2) -----
+        // Le joueur peut acheter plusieurs sortes de médicaments, l'une après l'autre.
+        // Il tape 0 quand il a fini ses achats.
+        boolean achatEnCours = true;
+        while (achatEnCours) {
+            System.out.println();
+            System.out.println("Budget " + clinique.getBudget() + " €. Quel médicament acheter ? (0 = fini)");
+            int numeroMed = 1;
+            for (Medicament m : Medicament.values()) {
+                System.out.println(numeroMed + ". " + m + " (" + m.getPrix() + " €, en stock "
+                        + clinique.compterMedicaments(m) + ")");
+                numeroMed++;
+            }
+
+            int choixMed = clavier.nextInt();
+
+            if (choixMed <= 0) {
+                achatEnCours = false;
+            } else if (choixMed > Medicament.values().length) {
+                System.out.println("Ce numéro n'existe pas.");
+            } else {
+                Medicament m = Medicament.values()[choixMed - 1];   // le médicament n°1 est à la place 0
+                System.out.println("Combien de " + m + " ?");
+                int quantite = clavier.nextInt();
+                clinique.acheterMedicaments(m, quantite);
+                System.out.println("Stock de " + m + " : " + clinique.compterMedicaments(m));
+            }
+        }
+
+        // ----- Étape 2b, le joueur affecte chaque soignant à un patient -----
         ArrayList<Patient> patients = clinique.getPatients();
 
         for (Soignant s : clinique.getSoignants()) {
@@ -104,7 +136,8 @@ public class Partie {
             // On affiche les patients avec un numéro qui commence à 1
             int numero = 1;
             for (Patient p : patients) {
-                System.out.println(numero + ". " + p.getPrenom() + " " + p.getNom() + " (gravité " + p.getGravite() + ")");
+                System.out.println(numero + ". " + p.getPrenom() + " " + p.getNom() + " (gravité " + p.getGravite()
+                        + ", " + p.getMaladie() + ", il faut " + p.getMaladie().getMedicament() + ")");
                 numero++;
             }
 
@@ -119,6 +152,8 @@ public class Partie {
                 boolean reussi = clinique.affecter(s, p);
                 if (reussi) {
                     System.out.println(s.getNom() + " soigne " + p.getNom() + ".");
+                } else if (clinique.compterMedicaments(p.getMaladie().getMedicament()) == 0) {
+                    System.out.println("Soin impossible, il n'y a plus de " + p.getMaladie().getMedicament() + " en stock.");
                 } else {
                     System.out.println(s.getNom() + " ne peut pas soigner ce patient.");
                 }
