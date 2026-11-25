@@ -92,9 +92,13 @@ public class Partie {
         // la clinique les accueille et on annonce leur arrivée au joueur.
         System.out.println("Arrivées du matin");
         for (Patient p : Patient.arriveeDuMatin()) {
-            clinique.accueillir(p);
-            System.out.println(p.getPrenom() + " " + p.getNom() + " arrive (" + p.getMaladie()
-                    + ", gravité " + p.getGravite() + ")");
+            boolean accueilli = clinique.accueillir(p);   // false si la clinique est pleine
+            if (accueilli) {
+                System.out.println(p.getPrenom() + " " + p.getNom() + " arrive (" + p.getMaladie()
+                        + ", gravité " + p.getGravite() + ")");
+            } else {
+                System.out.println(p.getPrenom() + " " + p.getNom() + " est refusé, la clinique est pleine.");
+            }
         }
 
         // ----- Étape 2a, le joueur achète des médicaments (V2) -----
