@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
  * les tests passent par une classe fille
  * (PseudoSoignant) qui n'existe que pour ce fichier.
  *
- * Auteur : Desiré Dady
+ * @Author Desiré Dady
  */
 public class SoignantTest {
 

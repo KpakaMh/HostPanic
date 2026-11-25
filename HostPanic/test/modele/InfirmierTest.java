@@ -28,8 +28,8 @@ public class InfirmierTest {
     @Test
     void testAcceptGraviteLimite() {
         // Adapte les paramètres selon le constructeur exact de ta classe Patient
-        Patient patient1 = new Patient("aaa", "bbb", Maladie.GRIPPE, 1, 6);
-        Patient patientgrave = new Patient("cccc", "dddd", Maladie.GRIPPE, 5, 6);
+        Patient patient1 = new Patient("aaa", "bbb", Maladie.GRIPPE, 1);
+        Patient patientgrave = new Patient("cccc", "dddd", Maladie.GRIPPE, 5);
 
         assertTrue(infirmier.peutSoigner(patient1));
         assertFalse(infirmier.peutSoigner(patientgrave));
