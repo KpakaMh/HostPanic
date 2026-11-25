@@ -11,8 +11,15 @@ package modele;
  */
 public enum Maladie {
     GRIPPE(1, 300, Medicament.ANTIGRIPPAL),
+    GASTRO_ENTERITE(1, 250, Medicament.REHYDRATANT),
+    ENTORSE(1, 250, Medicament.BANDAGE),
+    CRISE_ASTHME(1, 350, Medicament.BRONCHODILATATEUR),
+    MENINGITE(2, 650, Medicament.ANTIBIOTIQUE),
     FRACTURE(2, 600, Medicament.PLATRE),
-    INFARCTUS(3, 1200, Medicament.ANTICOAGULANT);
+    PNEUMONIE(2, 700, Medicament.ANTIBIOTIQUE),
+    APPENDICITE(2, 800, Medicament.ANESTHESIQUE),
+    INFARCTUS(3, 1200, Medicament.ANTICOAGULANT),
+    AVC(3, 1300, Medicament.THROMBOLYTIQUE);
 
     private final int dureeSoin;
     private final int prime;
