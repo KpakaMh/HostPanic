@@ -1,4 +1,3 @@
-
 package jeu;
 
 import modele.Clinique;
@@ -46,14 +45,6 @@ public class Partie {
     private Scanner clavier;
 
     // À FAIRE (V2) ajouter l'attribut Difficulte quand la classe Difficulte existera.
-
-
-
-
-
-
-
-
 
     /**
      * Crée une nouvelle partie, prête à jouer le jour 1.
