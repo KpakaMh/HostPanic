@@ -13,7 +13,13 @@ package modele;
 public enum Medicament {
     ANTIGRIPPAL(50),
     PLATRE(50),
-    ANTICOAGULANT(50);
+    ANTICOAGULANT(50),
+    REHYDRATANT(50),
+    BANDAGE(50),
+    BRONCHODILATATEUR(50),
+    ANTIBIOTIQUE(50),
+    ANESTHESIQUE(50),
+    THROMBOLYTIQUE(50);
 
     /** Le prix d'un médicament, en euros. */
     private final int prix;
