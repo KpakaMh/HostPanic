@@ -184,15 +184,29 @@ public Clinique(int budgetInitial) {
 
     /**
      * Termine la journée de la clinique (étapes 3 et 4 de la journée).
-     * Chaque patient qui n'a pas été soigné aujourd'hui s'aggrave.
-     * Un patient guéri rapporte la prime de sa maladie et 2 points de réputation, puis il quitte la clinique.
-     * Un patient décédé fait perdre 10 points de réputation et 500 € d'amende, puis il quitte la clinique.
-     * Enfin, les soignants et les patients redeviennent libres pour le lendemain.
+     * Cette méthode est appelée par Partie, une fois que le joueur a affecté ses soignants
+     * et avant le paiement des salaires. Elle fait seulement les calculs, sans rien afficher.
+     * <p>
+     * Étape 3, les aggravations. La méthode passe sur chaque patient de la clinique.
+     * Un patient qui n'est pas dans la liste patientsSoignes n'a reçu aucun soin aujourd'hui,
+     * alors sa gravité augmente de 1 (méthode aggraver de Patient).
+     * <p>
+     * Étape 4, les guérisons et les décès.
+     * Un patient guéri (sa durée de soin restante est à 0) rapporte à la clinique la prime
+     * de sa maladie (getPrime de Maladie) et 2 points de réputation (POINTS_GUERISON).
+     * Un patient décédé (sa gravité a atteint 5) coûte 500 € d'amende (AMENDE_DECES)
+     * et fait perdre 10 points de réputation (POINTS_DECES).
+     * Dans les deux cas, le patient quitte la clinique.
+     * Les patients qui ne sont ni guéris ni décédés restent pour le lendemain.
+     * <p>
+     * Fin de journée. Les listes soignantsOccupes et patientsSoignes sont vidées,
+     * pour que chaque soignant puisse de nouveau être affecté le lendemain
+     * et que chaque patient puisse de nouveau recevoir un soin.
      *
      * @author DJELGOU Hamidou
      */
     public void finirJournee() {
-        // La liste des patients qui quittent la clinique ce soir
+        // La liste des patients qui quittent la clinique à la fin de la journée (guéris ou décédés)
         ArrayList<Patient> partants = new ArrayList<>();
 
         for (Patient p : this.patients) {
