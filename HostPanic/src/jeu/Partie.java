@@ -1,6 +1,4 @@
-// CORRECTION COMPILATION (21/11/2026) : fichier restaure depuis le dernier commit (3437580).
-// La copie locale contenait une 2e classe publique "Main" (doublon de Main.java)
-// et aucune classe Partie : erreur "class Main is public, should be declared in Main.java".
+
 package jeu;
 
 import modele.Clinique;
@@ -55,7 +53,7 @@ public class Partie {
 
 
 
-    
+
 
     /**
      * Crée une nouvelle partie, prête à jouer le jour 1.
@@ -82,7 +80,7 @@ public class Partie {
      * Étape 1, arrivées. De 1 à 3 nouveaux patients entrent dans la clinique.
      * Étape 2, décisions. Pour chaque soignant, le joueur choisit au clavier le patient
      * à soigner (0 = personne), puis la clinique accepte ou refuse l'affectation.
-     * Étapes 3 et 4. Soins, aggravations, guérisons et décès (à venir, méthode de Clinique).
+     * Étapes 3 et 4. Aggravations, guérisons et décès, calculés par la clinique.
      * Étape 5, salaires. La clinique paie chaque soignant.
      * Étape 6. Événement du jour (V2).
      * Étape 7, bilan. Affichage du budget, de la réputation et du nombre de patients.
@@ -137,8 +135,8 @@ public class Partie {
         }
 
         // ----- Étapes 3 et 4, guérisons, aggravations, décès -----
-        // À FAIRE appeler la méthode de fin de journée de Clinique (écrite par Johanna,
-        // nom à confirmer en groupe, proposition clinique.finirJournee()).
+        // La clinique fait les calculs de fin de journée (méthode finirJournee de Clinique).
+        clinique.finirJournee();
 
         // ----- Étape 5, salaires -----
         clinique.payerSalaires();
