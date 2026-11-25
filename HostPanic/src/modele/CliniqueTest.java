@@ -55,7 +55,7 @@ class CliniqueTest {
      * Vérifie qu'un patient est refusé quand la clinique est pleine,
      * et qu'il n'est pas ajouté à la liste.
      *
-     * @author
+     * @author Mouhamadou Kpaka
      */
     @Test
     void refuseUnPatientQuandLaCliniqueEstPleine() {
@@ -81,10 +81,10 @@ class CliniqueTest {
         int accueillis = remplir(c);
 
         c.augmenterCapacite(2);
-
-        assertTrue(c.accueillir(new Patient(GRIPPE)));
-        assertTrue(c.accueillir(new Patient(GRIPPE)));
-        assertFalse(c.accueillir(new Patient(GRIPPE)));
+//
+        assertTrue(c.accueillir(new Patient("Patient", "Petit", GRIPPE, 4)));
+        assertTrue(c.accueillir(new Patient("Patient", "Patient", GRIPPE, 2)));
+        assertFalse(c.accueillir(new Patient("Patient", "Patient",GRIPPE, 3)));
         assertEquals(accueillis + 2, c.getPatients().size());
     }
 }
