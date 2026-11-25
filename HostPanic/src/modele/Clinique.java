@@ -182,4 +182,45 @@ public Clinique(int budgetInitial) {
         this.modifierBudget(-total); // Déduit le total du budget via la méthode dédiée
     }
 
+    /**
+     * Termine la journée de la clinique (étapes 3 et 4 de la journée).
+     * Chaque patient qui n'a pas été soigné aujourd'hui s'aggrave.
+     * Un patient guéri rapporte la prime de sa maladie et 2 points de réputation, puis il quitte la clinique.
+     * Un patient décédé fait perdre 10 points de réputation et 500 € d'amende, puis il quitte la clinique.
+     * Enfin, les soignants et les patients redeviennent libres pour le lendemain.
+     *
+     * @author DJELGOU Hamidou
+     */
+    public void finirJournee() {
+        // La liste des patients qui quittent la clinique ce soir
+        ArrayList<Patient> partants = new ArrayList<>();
+
+        for (Patient p : this.patients) {
+            // Un patient qui n'a pas été soigné aujourd'hui s'aggrave
+            if (!this.patientsSoignes.contains(p)) {
+                p.aggraver();
+            }
+
+            if (p.estGueri()) {
+                this.modifierBudget(p.getMaladie().getPrime());
+                this.modifierReputation(POINTS_GUERISON);
+                partants.add(p);
+            } else if (p.estDecede()) {
+                this.modifierBudget(-AMENDE_DECES);
+                this.modifierReputation(-POINTS_DECES);
+                partants.add(p);
+            }
+        }
+
+        // On retire les partants après la boucle, car on ne peut pas retirer
+        // un élément d'une liste pendant qu'on la parcourt avec for
+        for (Patient p : partants) {
+            this.patients.remove(p);
+        }
+
+        // Le lendemain, tout le monde est de nouveau libre
+        this.soignantsOccupes.clear();
+        this.patientsSoignes.clear();
+    }
+
 }
