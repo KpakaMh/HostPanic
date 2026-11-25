@@ -42,10 +42,13 @@ public class EpidemieGrippe extends Evenement {
 
     @Override
     public void appliquer(Clinique c) {
-        c.augmenterCapacite(NB_PATIENTS);
+        // Pendant l'épidémie, la clinique peut accueillir jusqu'à 5 patients
+        c.fixerCapacite(NB_PATIENTS);
         for (int i = 0; i < NB_PATIENTS; i++) {
             Patient p = new Patient("p", "P", GRIPPE, 2);
             c.accueillir(p);
         }
+        // Après l'épidémie, la capacité revient à la normale (3 patients)
+        c.fixerCapacite(Clinique.CAPACITE_NORMALE);
     }
 }
