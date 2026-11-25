@@ -1,5 +1,6 @@
 package evenement;
 
+import modele.BudgetInsuffisant;
 import modele.Clinique;
 
 /**
@@ -51,5 +52,5 @@ public abstract class Evenement {
      * @param c la clinique concernée par l'événement
      * @author
      */
-    public abstract void appliquer(Clinique c);
+    public abstract void appliquer(Clinique c) throws BudgetInsuffisant;
 }
