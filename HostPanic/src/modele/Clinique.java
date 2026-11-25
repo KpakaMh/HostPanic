@@ -1,5 +1,8 @@
 package modele;
 
+// CORRECTION COMPILATION (21/11/2026) : imports "Modele.Patient" et "Modele.Soignant" supprimes.
+// Le package "Modele" n'existe plus (renomme "modele") et ces classes sont dans le meme package.
+
 import java.util.ArrayList;
 
 /**
@@ -16,11 +19,22 @@ public class Clinique {
 
     private int budget;
     private int reputation;
-    private int medicaments;
+    /** Le stock de médicaments. Chaque médicament acheté est ajouté dans la liste (V2, DJELGOU Hamidou). */
+    private final ArrayList<Medicament> medicaments;
     private final ArrayList<Patient> patients;
     private final ArrayList<Soignant> soignants;
     private final ArrayList<Soignant> soignantsOccupes;
     private final ArrayList<Patient> patientsSoignes;
+    // AJOUT V1 (21/11/2026) : bilan de la dernière fin de journée, lu par Partie pour l'affichage.
+    private final ArrayList<Patient> guerisDuJour;
+    private final ArrayList<Patient> decedesDuJour;
+
+    /** Nombre maximum de patients que la clinique peut accueillir en même temps.
+     * @author Mouhamadou Kpaka
+     * @version V2
+     * */
+
+    private int capacite;
 
 /**
  * Initialise une nouvelle clinique avec le budget de départ défini selon la difficulté choisie.
@@ -30,11 +44,13 @@ public class Clinique {
 public Clinique(int budgetInitial) {
         this.budget = budgetInitial;
         this.reputation = REPUTATION_DEPART;
-        this.medicaments = 0; // Initialise le stock de médicaments à zéro au démarrage de la partie (les achats interviennent en V2).
+        this.medicaments = new ArrayList<>(); // Au départ, le stock de médicaments est vide (les achats interviennent en V2).
         this.patients = new ArrayList<>();
         this.soignants = new ArrayList<>();
         this.soignantsOccupes = new ArrayList<>();
         this.patientsSoignes = new ArrayList<>();
+        this.guerisDuJour = new ArrayList<>();
+        this.decedesDuJour = new ArrayList<>();
     }
 
     //Les getters
@@ -53,10 +69,22 @@ public Clinique(int budgetInitial) {
     }
 
     /**
-     * Retourne le stock de médicaments.
+     * Compte combien il reste d'un médicament dans le stock.
+     * La boucle passe sur chaque médicament du stock et ajoute 1
+     * au compteur à chaque fois qu'elle trouve le médicament demandé.
+     *
+     * @param m le médicament à compter
+     * @return le nombre de médicaments de ce type dans le stock
+     * @author DJELGOU Hamidou
      */
-    public int getMedicaments() {
-        return this.medicaments;
+    public int compterMedicaments(Medicament m) {
+        int nombre = 0;
+        for (Medicament x : this.medicaments) {
+            if (x == m) {
+                nombre++;
+            }
+        }
+        return nombre;
     }
 
     /**
@@ -96,17 +124,21 @@ public Clinique(int budgetInitial) {
         this.reputation = Math.max(0, Math.min(REPUTATION_MAX, nouvelle));
     }
 
+
     /**
-     * Fait entrer un patient dans la clinique.
+     * Accueille un patient si la clinique a encore de la place. Cette méthode évolue, passant de la v1 à v2
      *
      * @param p le patient à accueillir
+     * @return true si le patient est accueilli, false si la clinique est pleine
+     * @author Joahana
      */
-    public void accueillir(Patient p) {
-        if (p != null) {
-            this.patients.add(p);
+    public boolean accueillir(Patient p) {
+        if (patients.size() >= capacite) {
+            return false;
         }
+        patients.add(p);
+        return true;
     }
-
     /**
      * Ajoute un soignant à l'équipe, sans coût (équipe de départ).
      *
@@ -122,21 +154,26 @@ public Clinique(int budgetInitial) {
     /**
      * Affecte un soignant à un patient pour la journée.
      * L'affectation réussit si le soignant et le patient font partie de la clinique, ne sont pas déjà pris aujourd'hui, et si le soignant peut soigner ce patient. Le patient reçoit alors un soin.
+     * Depuis la V2, il faut aussi qu'il reste dans le stock le médicament de la maladie du patient.
+     * Chaque soin consomme un médicament (ajout V2, DJELGOU Hamidou).
      *
      * @param s le soignant
      * @param p le patient
      * @return true si l'affectation a eu lieu, false sinon
+     * @author DJELGOU Hamidou (ajout des médicaments, V2)
      */
     public boolean affecter(Soignant s, Patient p) {
         boolean possible = this.soignants.contains(s) //Le soignant s fait bien partie de l'équipe de la clinique.
                 && this.patients.contains(p) // Le patient p est bien présent dans la clinique
                 && !this.soignantsOccupes.contains(s) //Le soignant n'est pas déjà occupé aujourd'hui (le ! veut dire "non").
                 && !this.patientsSoignes.contains(p) //Le patient n'a pas déjà été pris en charge par un autre soignant.
-                && s.peutSoigner(p); // Le soignant a les compétences requises pour traiter ce patient (par exemple, un infirmier ne peut pas soigner une gravité 4, contrairement au médecin).
+                && s.peutSoigner(p) // Le soignant a les compétences requises pour traiter ce patient (par exemple, un infirmier ne peut pas soigner une gravité 4, contrairement au médecin).
+                && this.medicaments.contains(p.getMaladie().getMedicament()); // Il reste dans le stock le médicament de la maladie du patient (V2).
         if (possible) {
             p.recevoirSoin();
-            this.soignantsOccupes.add(s);
-            this.patientsSoignes.add(p);
+            this.medicaments.remove(p.getMaladie().getMedicament()); // Le soin consomme un médicament (V2).
+            this.soignantsOccupes.add(s);// Le soignant est maintenant occupé pour la journée.
+            this.patientsSoignes.add(p);// Le patient a été soigné aujourd'hui.
         }
         return possible; //Si toutes ces conditions sont vraies en même temps, la variable possible prend la valeur true, et l'affectation peut avoir lieu.
     }
@@ -154,14 +191,20 @@ public Clinique(int budgetInitial) {
     }
 
     /**
-     * Achète une quantité de médicaments et met à jour le budget de la clinique.
-     * 
+     * Achète une quantité d'un médicament et paie son prix.
+     * Chaque médicament acheté est ajouté une fois dans le stock,
+     * puis la clinique paie la quantité multipliée par le prix du médicament.
+     *
+     * @param m le médicament à acheter
      * @param quantite le nombre de médicaments à acheter
+     * @author DJELGOU Hamidou
      */
-    public void acheterMedicaments(int quantite) {
+    public void acheterMedicaments(Medicament m, int quantite) {
         if (quantite > 0) {
-            this.medicaments += quantite;
-            this.budget -= (quantite * 50); // Un médicament coûte 50 €
+            for (int i = 0; i < quantite; i++) {
+                this.medicaments.add(m); // un médicament de plus dans le stock
+            }
+            this.modifierBudget(-quantite * m.getPrix());
         }
     }
 
@@ -179,4 +222,69 @@ public Clinique(int budgetInitial) {
         this.modifierBudget(-total); // Déduit le total du budget via la méthode dédiée
     }
 
+    // ===== AJOUT V1 (21/11/2026) : étapes 3 et 4 de la journée =====
+
+    /**
+     * Termine la journée de soins (étapes 3 et 4).
+     * <ul>
+     *   <li>Un patient soigné aujourd'hui et dont la gravité vaut 0 est guéri :
+     *       il quitte la clinique, qui touche la prime de sa maladie et gagne de la réputation.</li>
+     *   <li>Un patient non soigné aujourd'hui s'aggrave (gravité + 1).</li>
+     *   <li>Un patient dont la gravité atteint 5 décède : il quitte la clinique,
+     *       qui paie une amende et perd de la réputation.</li>
+     * </ul>
+     * Les affectations du jour sont ensuite effacées pour le lendemain.
+     */
+    public void finirJournee() {
+        this.guerisDuJour.clear();
+        this.decedesDuJour.clear();
+
+        for (Patient p : new ArrayList<>(this.patients)) {
+            if (!this.patientsSoignes.contains(p)) {
+                p.aggraver();
+            }
+            if (p.estGueri()) {
+                this.patients.remove(p);
+                this.guerisDuJour.add(p);
+                this.modifierBudget(p.getMaladie().getPrime());
+                this.modifierReputation(POINTS_GUERISON);
+            } else if (p.estDecede()) {
+                this.patients.remove(p);
+                this.decedesDuJour.add(p);
+                this.modifierBudget(-AMENDE_DECES);
+                this.modifierReputation(-POINTS_DECES);
+            }
+        }
+
+        this.soignantsOccupes.clear();
+        this.patientsSoignes.clear();
+    }
+
+    /**
+     * Retourne une copie des patients guéris lors de la dernière fin de journée.
+     *
+     * @return les patients guéris
+     */
+    public ArrayList<Patient> getGuerisDuJour() {
+        return new ArrayList<>(this.guerisDuJour);
+    }
+
+    /**
+     * Retourne une copie des patients décédés lors de la dernière fin de journée.
+     *
+     * @return les patients décédés
+     */
+    public ArrayList<Patient> getDecedesDuJour() {
+        return new ArrayList<>(this.decedesDuJour);
+    }
+
+    /**
+     * Augmente la capacité d'accueil de la clinique.
+     *
+     * @param places nombre de places supplémentaires, positif
+     * @author
+     */
+    public void augmenterCapacite(int places) {
+        capacite += places;
+    }
 }

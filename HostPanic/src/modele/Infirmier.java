@@ -1,5 +1,7 @@
 package modele;
 
+// CORRECTION COMPILATION (21/11/2026) : import "Modele.Soignant" supprime (package inexistant, Soignant est dans le meme package).
+
 /**
  * Représente un infirmier
  * peut soigner seulement les gravités 1à3
@@ -7,7 +9,7 @@ package modele;
  * 
  * @author Valentin Painceira
 */
-public class Infirmier extends Soignant{
+public class Infirmier extends Soignant {
     /** 
      * constructeur de l'infirmier avec le nom prenom et le salaire
      * 

@@ -5,7 +5,7 @@ package modele;
  * la classe contient le salaire journalier et dit si c'est possible que le soignant peutSoigner(true ou false),
  * que chaque type de soignant redéfinit à sa manière
  *
- * @Author : Desire Dady
+ * @Author Desire Dady
  */
 public abstract class Soignant extends Personne {
     private int salaire;

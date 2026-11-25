@@ -1,4 +1,8 @@
 package modele;
+
+import modele.Patient;
+import modele.Soignant;
+
 /**
  * Représente un médecin au sein de la clinique.
  * Le médecin dispose de compétences avancées et peut soigner n'importe quel patient,

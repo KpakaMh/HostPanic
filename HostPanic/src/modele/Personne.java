@@ -1,20 +1,32 @@
 package modele;
+
+/**
+ * Classe abstraite Personne.
+ * Porte le nom et le prénom, communs aux patients et aux soignants.
+ *
+ * @author Fangnon Akouavi
+ */
 public abstract class Personne {
-    private String nom;
-    private String prenom;
+    private final String nom;
+    private final String prenom;
 
-
-    public Personne(String nom, String prenom){
+    /**
+     * Crée une personne.
+     * @param nom le nom de la personne
+     * @param prenom le prénom de la personne
+     */
+    public Personne(String nom, String prenom) {
         this.nom = nom;
         this.prenom = prenom;
     }
-    
-    public String getNom(){
+
+    /** @return le nom de la personne */
+    public String getNom() {
         return this.nom;
     }
 
-    public String getPrenom(){
+    /** @return le prénom de la personne */
+    public String getPrenom() {
         return this.prenom;
     }
-
 }

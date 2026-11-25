@@ -1,3 +1,6 @@
+// CORRECTION COMPILATION (21/11/2026) : package "Jeu" renomme en "jeu" (minuscule, comme le dossier et l'UML).
+package jeu;
+
 /**
  * Classe principale d'HostPanic!!
  * <p>
@@ -8,7 +11,6 @@
  * @version 1.0
  */
 public class Main {
-
     /**
      * Méthode principale.
      * <p>
@@ -16,11 +18,16 @@ public class Main {
      * </p>
      *
      * @param args arguments de la ligne de commande (non utilisés)
-     */
+     **/
     public static void main(String[] args) {
         afficherMenu();
+        // CORRECTION COMPILATION (21/11/2026) : "jeu.Partie" simplifie en "Partie" (meme package).
+        // "jourerJournee()" n'existait pas (coquille) : remplace par une boucle
+        // sur jouerJournee() jusqu'a estTerminee(), comme prevu dans Partie.
         Partie partie = new Partie();
-        partie.jouerPartie();
+        while (!partie.estTerminee()) {
+            partie.jouerJournee();
+        }
     }
 
     /**
