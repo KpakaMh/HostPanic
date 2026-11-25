@@ -126,11 +126,11 @@ public Clinique(int budgetInitial) {
 
 
     /**
-     * Accueille un patient si la clinique a encore de la place. Cette méthode évolue, passant de la v1 à v2
+     * Accueille un patient si la clinique a encore de la place.
      *
      * @param p le patient à accueillir
      * @return true si le patient est accueilli, false si la clinique est pleine
-     * @author Joahana
+     * @author Mouhamadou Kpaka Adesanya
      */
     public boolean accueillir(Patient p) {
         if (patients.size() >= capacite) {
@@ -139,6 +139,8 @@ public Clinique(int budgetInitial) {
         patients.add(p);
         return true;
     }
+
+
     /**
      * Ajoute un soignant à l'équipe, sans coût (équipe de départ).
      *
@@ -282,7 +284,7 @@ public Clinique(int budgetInitial) {
      * Augmente la capacité d'accueil de la clinique.
      *
      * @param places nombre de places supplémentaires, positif
-     * @author
+     * @author Mouhamadou Kpaka Adesanya
      */
     public void augmenterCapacite(int places) {
         capacite += places;
