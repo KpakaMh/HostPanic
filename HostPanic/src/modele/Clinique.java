@@ -209,9 +209,10 @@ public Clinique(int budgetInitial) {
     public void acheterMedicaments(Medicament m, int quantite) throws BudgetInsuffisant{
         if (quantite > 0) {
             for (int i = 0; i < quantite; i++) {
-                this.medicaments.add(m); // un médicament de plus dans le stock
+                this.modifierBudget(-quantite * m.getPrix());
+                
             }
-            this.modifierBudget(-quantite * m.getPrix());
+                this.medicaments.add(m); // un médicament de plus dans le stock
         }
     }
 
