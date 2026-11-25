@@ -26,10 +26,10 @@ public class Infirmier extends Soignant {
      * selon ca limite de gravite 3 maximum
      * 
     * @param p patient examiner
-     * @return true si 1;2
-     * @return false si 3;4;5
+     * @return true si 1;2;3;4
+     * @return false si 5
      * 
      */
 @Override 
 public boolean peutSoigner (Patient p){
-return p.getGravite() < 3;}}
+return p.getGravite() < 4;}}
