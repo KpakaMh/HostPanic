@@ -249,7 +249,7 @@ public Clinique(int budgetInitial) {
      * et que chaque patient puisse de nouveau recevoir un soin.
      *
      * @author DJELGOU Hamidou
-     * @author Mouhamadou Kpaka (listes guerisDuJour et decedesDuJour)
+     * 
      */
     public void finirJournee() {
         this.guerisDuJour.clear();
